@@ -9,6 +9,10 @@ import { OndcModule } from './modules/ondc/ondc.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { StoresModule } from './modules/stores/stores.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
+import { SearchModule } from './modules/search/search.module';
 @Module({
   imports: [
   ConfigModule.forRoot({
@@ -21,6 +25,10 @@ import { StoresModule } from './modules/stores/stores.module';
   AuthModule,
   ProductsModule,
   StoresModule,
+  CategoriesModule,
+  OrdersModule,
+  InventoryModule,
+  SearchModule,
 ],
   controllers: [AppController],
   providers: [AppService],

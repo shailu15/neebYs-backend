@@ -28,4 +28,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsString()
   barcode?: string;
+
+  @IsString()
+  storeId!: string;
 }

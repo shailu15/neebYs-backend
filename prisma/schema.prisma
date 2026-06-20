@@ -31,6 +31,54 @@ model Product {
   mrp           Float
   sellingPrice  Float
   barcode       String?  @unique
+
+  storeId       String
+  store         Store    @relation(fields: [storeId], references: [id])
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+// model stores
+model Store {
+  id        String   @id @default(cuid())
+  name      String
+  owner     String
+  phone     String
+  address   String
+  city      String
+  pincode   String
+
+  products  Product[]
+
+  createdAt DateTime @default(now())
+}
+
+// model category
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+// model orders
+model Order {
+  id         String   @id @default(cuid())
+
+  customer   String
+
+  totalPrice Float
+
+  status     String
+
+  createdAt  DateTime @default(now())
+}
+
+//model inventory
+model Inventory {
+  id        String   @id @default(cuid())
+
+  quantity  Int
+
+  updatedAt DateTime @updatedAt
 }

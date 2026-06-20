@@ -8,11 +8,29 @@ export class ProductsService {
 
   create(createProductDto: CreateProductDto) {
     return this.prisma.product.create({
-      data: createProductDto,
+      data: {
+        name: createProductDto.name,
+        description: createProductDto.description,
+        brand: createProductDto.brand,
+        category: createProductDto.category,
+        mrp: createProductDto.mrp,
+        sellingPrice: createProductDto.sellingPrice,
+        barcode: createProductDto.barcode,
+
+        store: {
+          connect: {
+            id: createProductDto.storeId,
+          },
+        },
+      },
     });
   }
 
   findAll() {
-    return this.prisma.product.findMany();
+    return this.prisma.product.findMany({
+      include: {
+        store: true,
+      },
+    });
   }
 }
