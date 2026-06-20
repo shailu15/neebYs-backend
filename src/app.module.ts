@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AiModule } from './modules/ai/ai.module';
 import { OndcModule } from './modules/ondc/ondc.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ProductsModule } from './modules/products/products.module';
+import { StoresModule } from './modules/stores/stores.module';
 @Module({
   imports: [
   ConfigModule.forRoot({
@@ -17,6 +19,8 @@ import { AuthModule } from './modules/auth/auth.module';
   AiModule,
   OndcModule,
   AuthModule,
+  ProductsModule,
+  StoresModule,
 ],
   controllers: [AppController],
   providers: [AppService],
