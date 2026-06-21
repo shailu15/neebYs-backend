@@ -12,8 +12,11 @@ export class ProductsService {
         name: createProductDto.name,
         description: createProductDto.description,
         brand: createProductDto.brand,
-        category: createProductDto.category,
-        mrp: createProductDto.mrp,
+        category: {
+  connect: {
+    id: createProductDto.categoryId,
+  },
+},        mrp: createProductDto.mrp,
         sellingPrice: createProductDto.sellingPrice,
         barcode: createProductDto.barcode,
 

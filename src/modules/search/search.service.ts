@@ -8,13 +8,29 @@ export class SearchService {
   async search(query: string) {
     return this.prisma.product.findMany({
       where: {
-        name: {
-          contains: query,
-          mode: 'insensitive',
-        },
+        OR: [
+          {
+            name: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          {
+            category: {
+              is: {
+                name: {
+                  contains: query,
+                  mode: 'insensitive',
+                },
+              },
+            },
+          },
+        ],
       },
       include: {
         store: true,
+        inventory: true,
+        category: true,
       },
     });
   }

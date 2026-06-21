@@ -17,7 +17,7 @@ export class CreateProductDto {
   brand?: string;
 
   @IsString()
-  category!: string;
+  categoryId!: string;
 
   @IsNumber()
   mrp!: number;

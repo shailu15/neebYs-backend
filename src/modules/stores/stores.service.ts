@@ -13,6 +13,14 @@ export class StoresService {
   }
 
   findAll() {
-    return this.prisma.store.findMany();
-  }
+  return this.prisma.store.findMany({
+    include: {
+      products: {
+        include: {
+          inventory: true,
+        },
+      },
+    },
+  });
+}
 }
