@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Patch} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ProductsService } from './products.service';
@@ -9,6 +9,25 @@ import { CreateProductDto } from './dto/create-product.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+
+  //patch
+
+  @Patch(':id')
+update(
+  @Param('id') id: string,
+  @Body() body: any,
+) {
+  return this.productsService.update(
+    id,
+    body,
+  );
+}
+
+  @Get(':id')
+findOne(@Param('id') id: string) {
+  return this.productsService.findOne(id);
+}
+
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
@@ -18,4 +37,9 @@ export class ProductsController {
   findAll() {
     return this.productsService.findAll();
   }
+
+  @Get('barcode/:barcode')
+findByBarcode(@Param('barcode') barcode: string) {
+  return this.productsService.findByBarcode(barcode);
+}
 }

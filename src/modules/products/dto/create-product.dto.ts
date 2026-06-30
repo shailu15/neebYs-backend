@@ -16,8 +16,9 @@ export class CreateProductDto {
   @IsString()
   brand?: string;
 
+  @IsOptional()
   @IsString()
-  categoryId!: string;
+  categoryId?: string;
 
   @IsNumber()
   mrp!: number;
@@ -29,6 +30,11 @@ export class CreateProductDto {
   @IsString()
   barcode?: string;
 
+  @IsOptional()
   @IsString()
-  storeId!: string;
+  storeId?: string;
+
+  @IsOptional()
+@IsNumber()
+stock?: number;
 }

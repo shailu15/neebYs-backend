@@ -23,4 +23,21 @@ export class StoresService {
     },
   });
 }
+
+async dashboard(storeId: string) {
+  const store = await this.prisma.store.findUnique({
+    where: {
+      id: storeId,
+    },
+    include: {
+      products: {
+        include: {
+          inventory: true,
+        },
+      },
+    },
+  });
+
+  return store;
+}
 }

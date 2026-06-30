@@ -4,15 +4,36 @@ import { CreateInventoryDto } from './dto/create-inventory.dto';
 
 @Injectable()
 export class InventoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+  ) {}
 
-  create(createInventoryDto: CreateInventoryDto) {
-    return this.prisma.inventory.create({
-      data: createInventoryDto,
+  async create(
+    createInventoryDto: CreateInventoryDto,
+  ) {
+    return this.prisma.inventory.upsert({
+      where: {
+        productId:
+          createInventoryDto.productId,
+      },
+      update: {
+        quantity:
+          createInventoryDto.quantity,
+      },
+      create: {
+        productId:
+          createInventoryDto.productId,
+        quantity:
+          createInventoryDto.quantity,
+      },
     });
   }
 
-  findAll() {
-    return this.prisma.inventory.findMany();
+  async findAll() {
+    return this.prisma.inventory.findMany({
+      include: {
+        product: true,
+      },
+    });
   }
 }

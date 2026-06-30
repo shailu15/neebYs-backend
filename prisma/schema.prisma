@@ -6,10 +6,11 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 // datasource db
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 //model user
@@ -19,78 +20,145 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+
+  carts          Cart[]
+  recentlyViewed RecentlyViewed[]
 }
 
 //model products
 model Product {
-  id            String   @id @default(cuid())
-  name          String
-  description   String?
-  brand         String?
+  id          String @id @default(cuid())
+  name        String
+  description String?
+  brand       String?
+
   categoryId String?
-  category   Category? @relation(fields: [categoryId], references: [id])
-  mrp           Float
-  sellingPrice  Float
-  barcode       String?  @unique
+  category Category? @relation(fields: [categoryId], references: [id])
 
-  storeId       String?
-  store         Store?   @relation(fields: [storeId], references: [id])
+  mrp Float
+  sellingPrice Float
 
-  inventory     Inventory?
+  stock Int @default(0)
 
+  barcode String? @unique
+
+  unit String?
+  weight String?
+  imageUrl String?
+  isActive Boolean @default(true)
+
+  storeId String?
+  store Store? @relation(fields: [storeId], references: [id])
+
+  inventory Inventory?
   orders Order[]
+  carts Cart[]
+  recentlyViewed RecentlyViewed[]
+  storeProducts StoreProduct[]
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // model stores
 model Store {
-  id        String   @id @default(cuid())
-  name      String
-  owner     String
-  phone     String
-  address   String
-  city      String
-  pincode   String
+  id      String @id @default(cuid())
+  name    String
+  owner   String
+  phone   String
+  address String
+  city    String
+  pincode String
 
-  products  Product[]
+  latitude  Float?
+  longitude Float?
+
+  products Product[]
+
+  storeProducts StoreProduct[]
 
   createdAt DateTime @default(now())
 }
 
 // model category
 model Category {
-  id       String    @id @default(cuid())
-  name     String    @unique
+  id   String @id @default(cuid())
+  name String @unique
 
   products Product[]
 }
 
 // model orders
 model Order {
-  id         String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  customer   String
+  customer String
 
   totalPrice Float
 
-  status     String
+  status String
 
-  productId  String
-  product    Product  @relation(fields: [productId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 //model inventory
 model Inventory {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  quantity  Int
+  quantity Int
 
-  productId String   @unique
-  product   Product  @relation(fields: [productId], references: [id])
+  productId String  @unique
+  product   Product @relation(fields: [productId], references: [id])
 
   updatedAt DateTime @updatedAt
+}
+
+// model cart
+
+model Cart {
+  id       String @id @default(cuid())
+  quantity Int
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// RecentlyViewed model
+
+model RecentlyViewed {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+// store product model
+model StoreProduct {
+  id String @id @default(cuid())
+
+  storeId String
+  store   Store  @relation(fields: [storeId], references: [id])
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  price    Float
+  quantity Int
+
+  createdAt DateTime @default(now())
+
+  @@unique([storeId, productId])
 }
