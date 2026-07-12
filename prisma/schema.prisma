@@ -1,164 +1,115 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-//model user
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-
+  id             String           @id @default(cuid())
+  name           String
+  email          String           @unique
+  password       String
+  createdAt      DateTime         @default(now())
   carts          Cart[]
   recentlyViewed RecentlyViewed[]
 }
 
-//model products
 model Product {
-  id          String @id @default(cuid())
-  name        String
-  description String?
-  brand       String?
-
-  categoryId String?
-  category Category? @relation(fields: [categoryId], references: [id])
-
-  mrp Float
-  sellingPrice Float
-
-  stock Int @default(0)
-
-  barcode String? @unique
-
-  unit String?
-  weight String?
-  imageUrl String?
-  isActive Boolean @default(true)
-
-  storeId String?
-  store Store? @relation(fields: [storeId], references: [id])
-
-  inventory Inventory?
-  orders Order[]
-  carts Cart[]
+  id             String           @id @default(cuid())
+  name           String
+  description    String?
+  brand          String?
+  categoryId     String?
+  mrp            Float
+  sellingPrice   Float
+  stock          Int              @default(0)
+  barcode        String?          @unique
+  unit           String?
+  weight         String?
+  imageUrl       String?
+  isActive       Boolean          @default(true)
+  storeId        String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  carts          Cart[]
+  inventory      Inventory?
+  orders         Order[]
+  category       Category?        @relation(fields: [categoryId], references: [id])
+  store          Store?           @relation(fields: [storeId], references: [id])
   recentlyViewed RecentlyViewed[]
-  storeProducts StoreProduct[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  storeProducts  StoreProduct[]
 }
 
-// model stores
 model Store {
-  id      String @id @default(cuid())
-  name    String
-  owner   String
-  phone   String
-  address String
-  city    String
-  pincode String
-
-  latitude  Float?
-  longitude Float?
-
-  products Product[]
-
+  id            String         @id @default(cuid())
+  name          String
+  owner         String
+  phone         String
+  address       String
+  city          String
+  pincode       String
+  latitude      Float?
+  longitude     Float?
+  createdAt     DateTime       @default(now())
+  products      Product[]
   storeProducts StoreProduct[]
-
-  createdAt DateTime @default(now())
 }
 
-// model category
 model Category {
-  id   String @id @default(cuid())
-  name String @unique
-
+  id       String    @id @default(cuid())
+  name     String    @unique
   products Product[]
 }
 
-// model orders
 model Order {
-  id String @id @default(cuid())
-
-  customer String
-
+  id         String   @id @default(cuid())
+  customer   String
   totalPrice Float
-
-  status String
-
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
-
-  createdAt DateTime @default(now())
+  status     String
+  productId  String
+  createdAt  DateTime @default(now())
+  product    Product  @relation(fields: [productId], references: [id])
 }
 
-//model inventory
 model Inventory {
-  id String @id @default(cuid())
-
-  quantity Int
-
-  productId String  @unique
-  product   Product @relation(fields: [productId], references: [id])
-
+  id        String   @id @default(cuid())
+  quantity  Int
+  productId String   @unique
   updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
 }
-
-// model cart
 
 model Cart {
-  id       String @id @default(cuid())
-  quantity Int
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
+  id        String   @id @default(cuid())
+  quantity  Int
+  userId    String
   productId String
-  product   Product @relation(fields: [productId], references: [id])
-
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
-
-// RecentlyViewed model
 
 model RecentlyViewed {
-  id String @id @default(cuid())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
+  id        String   @id @default(cuid())
+  userId    String
   productId String
-  product   Product @relation(fields: [productId], references: [id])
-
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
-// store product model
 model StoreProduct {
-  id String @id @default(cuid())
-
-  storeId String
-  store   Store  @relation(fields: [storeId], references: [id])
-
+  id        String   @id @default(cuid())
+  storeId   String
   productId String
-  product   Product @relation(fields: [productId], references: [id])
-
-  price    Float
-  quantity Int
-
+  price     Float
+  quantity  Int
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  store     Store    @relation(fields: [storeId], references: [id])
 
   @@unique([storeId, productId])
 }
